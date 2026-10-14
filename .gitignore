@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+
+# Environment files (secrets must never be committed)
+.env
+
+# Local database files created by the dev server
+server/.data/
+
+# Build output
+client/dist/
+
+# Zips / OS files
+*.zip
+.DS_Store
+Thumbs.db
