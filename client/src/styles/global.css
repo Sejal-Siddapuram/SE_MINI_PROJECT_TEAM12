@@ -264,6 +264,7 @@ main.container {
 .form-field textarea:focus {
   outline: none;
   border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.25);
 }
 .form-field.has-error input,
 .form-field.has-error select,
@@ -428,4 +429,233 @@ table.table {
 }
 .pre-line {
   white-space: pre-line;
+}
+
+/* =========================================================
+   NFR-02: Usability layer
+   - visible keyboard focus and a skip link
+   - responsive layout for mobile viewports (<= 720px)
+   - comfortable touch targets
+   - status meaning shown with symbols, not colour alone
+   - respects "reduce motion" system setting
+   ========================================================= */
+
+/* ---------- Screen-reader-only text ---------- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Keyboard focus (WCAG 2.4.7) ---------- */
+a:focus-visible,
+button:focus-visible,
+.btn:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+.form-field.has-error input:focus,
+.form-field.has-error select:focus,
+.form-field.has-error textarea:focus {
+  box-shadow: 0 0 0 3px rgba(180, 35, 24, 0.25);
+}
+
+/* ---------- Skip link: first thing keyboard users reach ---------- */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100px;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 600;
+}
+.skip-link:focus {
+  top: 0.5rem;
+}
+
+/* ---------- Navbar menu (desktop) ---------- */
+.navbar {
+  position: relative;
+}
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex: 1;
+}
+.menu-toggle {
+  display: none;
+}
+
+/* ---------- Forms: never overflow their container ---------- */
+.form-field {
+  min-width: 0;
+}
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+}
+.required-mark {
+  color: var(--color-danger);
+}
+
+/* ---------- Alerts and badges with symbols ---------- */
+.alert {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+}
+.alert-icon {
+  font-weight: 700;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.badge-icon {
+  font-size: 0.75em;
+}
+
+/* ---------- Wide tables scroll inside their card instead of breaking the page ---------- */
+.table-wrap {
+  overflow-x: auto;
+}
+.table-wrap .table {
+  min-width: 560px;
+}
+.tabs {
+  overflow-x: auto;
+}
+
+/* ---------- Mobile layout ---------- */
+@media (max-width: 720px) {
+  h1 {
+    font-size: 1.45rem;
+  }
+  .container {
+    padding: 0 1rem;
+  }
+  main.container {
+    padding-top: 1.25rem;
+  }
+
+  /* Navbar collapses into a menu button */
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-left: auto;
+    min-height: 44px;
+    padding: 0 0.9rem;
+    font: inherit;
+    font-weight: 600;
+    background: var(--color-surface);
+    color: var(--color-ink);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .nav-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: var(--shadow);
+  }
+  .nav-menu.open {
+    display: flex;
+  }
+  .nav-links {
+    flex-direction: column;
+  }
+  .nav-links a {
+    padding: 0.75rem;
+  }
+  .nav-user {
+    margin-left: 0;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    border-top: 1px solid var(--color-border);
+    padding-top: 0.75rem;
+  }
+
+  /* Single-column layouts */
+  .form-row,
+  .form-row-3,
+  .feature-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .feature-grid .card {
+    margin-bottom: 1rem;
+  }
+  .page-header {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .card {
+    padding: 1.1rem;
+  }
+  .hero {
+    padding: 1.5rem 0;
+  }
+  .hero h1 {
+    font-size: 1.75rem;
+  }
+  .hero-actions {
+    flex-direction: column;
+  }
+  .detail-list {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
+  .detail-list dd {
+    margin-bottom: 0.6rem;
+  }
+
+  /* Comfortable touch targets (at least 44px high) */
+  .btn,
+  .form-field input,
+  .form-field select {
+    min-height: 44px;
+  }
+  .btn-sm {
+    min-height: 40px;
+  }
+  .page-header > .btn,
+  form > .btn-group > .btn {
+    width: 100%;
+  }
+  .pagination {
+    gap: 0.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* ---------- Respect "reduce motion" ---------- */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
 }
