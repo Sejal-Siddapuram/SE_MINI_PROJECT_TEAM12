@@ -11,4 +11,10 @@ export const navLinks = [
     roles: ['Student', 'Recruiter', 'Admin'],
     description: 'Your home page.',
   },
+  {
+    to: '/recruiter/listings',
+    label: 'My Listings',
+    roles: ['Recruiter'],
+    description: 'Create, edit and publish internship and job listings.',
+  },
 ];

@@ -28,6 +28,8 @@ app.get('/api/health', (req, res) => {
 
 // ---- Module routes: each module owner registers their router here ----
 app.use('/api/auth', require('./routes/authRoutes')); // FR-01, FR-02 - Sejal
+app.use('/api/listings', require('./routes/listingRoutes')); // FR-07 - Sagar
+app.use('/api/recruiter', require('./routes/recruiterRoutes')); // FR-07 - Sagar
 
 // ---- Errors (must stay last) ----
 app.use('/api', notFound);

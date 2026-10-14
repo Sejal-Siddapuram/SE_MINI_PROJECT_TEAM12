@@ -6,6 +6,8 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import NotFound from './pages/NotFound';
+import MyListings from './pages/recruiter/MyListings';
+import ListingForm from './pages/recruiter/ListingForm';
 
 export default function App() {
   return (
@@ -27,6 +29,32 @@ export default function App() {
           />
 
           {/* Each module owner registers their pages below */}
+
+          {/* Recruiter Portal (FR-07) - Sagar */}
+          <Route
+            path="/recruiter/listings"
+            element={
+              <ProtectedRoute roles={['Recruiter']}>
+                <MyListings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/recruiter/listings/new"
+            element={
+              <ProtectedRoute roles={['Recruiter']}>
+                <ListingForm />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/recruiter/listings/:id/edit"
+            element={
+              <ProtectedRoute roles={['Recruiter']}>
+                <ListingForm />
+              </ProtectedRoute>
+            }
+          />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
