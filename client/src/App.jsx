@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+﻿import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
@@ -8,6 +8,8 @@ import Dashboard from './pages/Dashboard';
 import NotFound from './pages/NotFound';
 import MyListings from './pages/recruiter/MyListings';
 import ListingForm from './pages/recruiter/ListingForm';
+import SearchListings from './pages/student/SearchListings';
+import ListingDetail from './pages/student/ListingDetail';
 
 export default function App() {
   return (
@@ -27,6 +29,10 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+
+          {/* FR-04 - Sampath: Student listing search */}
+          <Route path="/listings" element={<SearchListings />} />
+          <Route path="/listings/:id" element={<ListingDetail />} />
 
           {/* Each module owner registers their pages below */}
 
@@ -62,3 +68,4 @@ export default function App() {
     </>
   );
 }
+
