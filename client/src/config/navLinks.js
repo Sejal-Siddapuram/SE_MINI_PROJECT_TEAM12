@@ -1,4 +1,5 @@
-﻿/**
+﻿
+/**
  * Navigation links shown in the navbar and as cards on the dashboard.
  * Each module owner adds the links for their own pages to this list.
  *   roles       -> which user roles can see the link
@@ -23,5 +24,18 @@ export const navLinks = [
     roles: ['Recruiter'],
     description: 'Create, edit and publish internship and job listings.',
   },
+  {
+    to: '/admin/recruiters',
+    label: 'Recruiters',
+    roles: ['Admin'],
+    description: 'Onboard new companies and recruiter accounts.',
+  },
+  {
+    to: '/admin/listings',
+    label: 'Moderation',
+    roles: ['Admin'],
+    description: 'Approve, edit or remove listings before students see them.',
+  },
 ];
+
 

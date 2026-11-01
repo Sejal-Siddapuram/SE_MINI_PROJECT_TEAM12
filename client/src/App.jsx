@@ -1,4 +1,5 @@
-﻿import { Routes, Route } from 'react-router-dom';
+﻿
+import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
@@ -10,6 +11,10 @@ import MyListings from './pages/recruiter/MyListings';
 import ListingForm from './pages/recruiter/ListingForm';
 import SearchListings from './pages/student/SearchListings';
 import ListingDetail from './pages/student/ListingDetail';
+
+// FR-10 - Saiesh
+import OnboardRecruiters from './pages/admin/OnboardRecruiters';
+import ModerateListings from './pages/admin/ModerateListings';
 
 export default function App() {
   return (
@@ -34,8 +39,6 @@ export default function App() {
           <Route path="/listings" element={<SearchListings />} />
           <Route path="/listings/:id" element={<ListingDetail />} />
 
-          {/* Each module owner registers their pages below */}
-
           {/* Recruiter Portal (FR-07) - Sagar */}
           <Route
             path="/recruiter/listings"
@@ -58,6 +61,24 @@ export default function App() {
             element={
               <ProtectedRoute roles={['Recruiter']}>
                 <ListingForm />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Admin Portal (FR-10) - Saiesh */}
+          <Route
+            path="/admin/recruiters"
+            element={
+              <ProtectedRoute roles={['Admin']}>
+                <OnboardRecruiters />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/listings"
+            element={
+              <ProtectedRoute roles={['Admin']}>
+                <ModerateListings />
               </ProtectedRoute>
             }
           />
