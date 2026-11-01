@@ -36,8 +36,8 @@ export default function App() {
           />
 
           {/* FR-04 - Sampath: Student listing search */}
-          <Route path="/listings" element={<SearchListings />} />
-          <Route path="/listings/:id" element={<ListingDetail />} />
+          <Route path="/listings" element={<ProtectedRoute roles={['Student']}><SearchListings /></ProtectedRoute>} />
+          <Route path="/listings/:id" element={<ProtectedRoute roles={['Student']}><ListingDetail /></ProtectedRoute>} />
 
           {/* Recruiter Portal (FR-07) - Sagar */}
           <Route
