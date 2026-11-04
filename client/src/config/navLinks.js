@@ -13,6 +13,12 @@ export const navLinks = [
     description: 'Search and filter published internship and job listings.',
   },
   {
+    to: '/applications',
+    label: 'My Applications',
+    roles: ['Student'],
+    description: 'Track your applications, withdraw one, and see status notifications.',
+  },
+  {
     to: '/dashboard',
     label: 'Dashboard',
     roles: ['Student', 'Recruiter', 'Admin'],

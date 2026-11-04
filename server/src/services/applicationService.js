@@ -62,4 +62,47 @@ async function applyToListing(studentId, listingId) {
   }
 }
 
-module.exports = { applyToListing, missingProfileParts };
+/** FR-06: the student's own applications, newest first, with the listing details */
+async function listMyApplications(studentId) {
+  const applications = await Application.find({ studentId })
+    .sort({ appliedAt: -1 })
+    .populate('listingId', 'title company location type deadline');
+  return applications.map((a) => ({
+    id: a._id,
+    status: a.status,
+    appliedAt: a.appliedAt,
+    // listing is null if the listing was removed after the student applied
+    listing: a.listingId
+      ? {
+          id: a.listingId._id,
+          title: a.listingId.title,
+          company: a.listingId.company,
+          location: a.listingId.location,
+          type: a.listingId.type,
+          deadline: a.listingId.deadline,
+        }
+      : null,
+  }));
+}
+
+/**
+ * FR-06: a student withdraws their own application, only while it is still Applied.
+ * The application is deleted, so the student may apply to the same listing again (BR-01).
+ *  - 404 APPLICATION_NOT_FOUND, 403 FORBIDDEN (someone else's), 409 DECISION_MADE
+ */
+async function withdrawApplication(studentId, applicationId) {
+  const application = await Application.findById(applicationId);
+  if (!application) throw new AppError(404, 'APPLICATION_NOT_FOUND', 'Application not found.');
+  if (String(application.studentId) !== String(studentId)) {
+    throw new AppError(403, 'FORBIDDEN', 'You can only withdraw your own application.');
+  }
+
+  // Delete only if the status is still Applied at this moment, so a recruiter's decision
+  // that arrives at the same time cannot be undone by a withdrawal.
+  const deleted = await Application.findOneAndDelete({ _id: application._id, status: 'Applied' });
+  if (!deleted) {
+    throw new AppError(409, 'DECISION_MADE', 'The recruiter has already responded, so this application cannot be withdrawn.');
+  }
+}
+
+module.exports = { applyToListing, missingProfileParts, listMyApplications, withdrawApplication };

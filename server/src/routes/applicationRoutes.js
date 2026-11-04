@@ -1,5 +1,5 @@
 const express = require('express');
-const { body } = require('express-validator');
+const { body, param } = require('express-validator');
 const applicationController = require('../controllers/applicationController');
 const authenticate = require('../middleware/auth');
 const authorize = require('../middleware/rbac');
@@ -17,6 +17,16 @@ router.post(
   body('listingId').isMongoId().withMessage('Invalid listing id.'),
   validate,
   applicationController.apply
+);
+
+router.get('/me', studentOnly, applicationController.myApplications);
+
+router.delete(
+  '/:id',
+  studentOnly,
+  param('id').isMongoId().withMessage('Invalid application id.'),
+  validate,
+  applicationController.withdraw
 );
 
 module.exports = router;
