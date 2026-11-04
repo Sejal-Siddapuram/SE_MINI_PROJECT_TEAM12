@@ -98,6 +98,12 @@ export default function ListingDetail() {
                 {applyNotice && (
                   <Alert type={applyNotice.type}>
                     {applyNotice.text}
+                    {applyNotice.type !== 'error' && (
+                      <>
+                        {' '}
+                        <Link to="/applications">View my applications</Link>
+                      </>
+                    )}
                     {applyNotice.details?.length > 0 && (
                       <ul>
                         {applyNotice.details.map((d) => (

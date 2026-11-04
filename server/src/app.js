@@ -35,6 +35,7 @@ app.use('/api/listings', require('./routes/searchRoutes')); // FR-04 - Sampath
 app.use('/api/recruiter', require('./routes/recruiterRoutes')); // FR-07 - Sagar
 app.use('/api/admin', require('./routes/adminRoutes')); // FR-10 - Saiesh
 app.use('/api/applications', require('./routes/applicationRoutes')); // FR-05, FR-06 - Sampath
+app.use('/api/notifications', require('./routes/notificationRoutes')); // FR-06, UC-11 - Sampath
 
 // Error handling (must stay last)
 app.use('/api', notFound);
