@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from 'react';
-import { loginUser } from '../services/authApi';
+import { loginUser, logoutUser } from '../services/authApi';
 import { saveSession, loadSessionUser, clearSession } from '../services/api';
 
 const AuthContext = createContext(null);
@@ -15,9 +15,16 @@ export function AuthProvider({ children }) {
     return loggedInUser;
   }
 
-  function logout() {
-    clearSession();
-    setUser(null);
+  // SR-04: revoke the token on the server, then forget it in the browser
+  async function logout() {
+    try {
+      await logoutUser();
+    } catch {
+      // Even if the server can't be reached, the user is still logged out on this device
+    } finally {
+      clearSession();
+      setUser(null);
+    }
   }
 
   return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;

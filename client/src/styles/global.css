@@ -357,12 +357,14 @@ table.table {
 }
 .badge-published,
 .badge-approved,
+.badge-complete,
 .badge-open,
 .badge-selected {
   background: var(--color-success-soft);
   color: var(--color-success);
 }
 .badge-pending,
+.badge-incomplete,
 .badge-applied,
 .badge-shortlisted {
   background: var(--color-warning-soft);

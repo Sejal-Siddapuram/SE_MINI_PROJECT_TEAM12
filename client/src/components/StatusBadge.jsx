@@ -13,6 +13,8 @@ const ICONS = {
   shortlisted: '★',
   rejected: '✕',
   selected: '✓',
+  complete: '✓',
+  incomplete: '◷',
 };
 
 /**

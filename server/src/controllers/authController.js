@@ -19,4 +19,10 @@ const me = asyncHandler(async (req, res) => {
   res.json({ success: true, data: { user } });
 });
 
-module.exports = { register, login, me };
+// POST /api/auth/logout  (SR-04)
+const logout = asyncHandler(async (req, res) => {
+  await authService.logout(req.user);
+  res.json({ success: true });
+});
+
+module.exports = { register, login, me, logout };
