@@ -14,3 +14,10 @@ client/dist/
 *.zip
 .DS_Store
 Thumbs.db
+
+# Test output (the final reports are copied into docs/reports)
+server/coverage/
+server/test-report/
+
+# Uploaded resumes (FR-03) - user files never go into Git
+server/uploads/
