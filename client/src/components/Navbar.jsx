@@ -20,8 +20,8 @@ export default function Navbar() {
     setMenuOpen(false);
   }, [location.pathname]);
 
-  function handleLogout() {
-    logout();
+  async function handleLogout() {
+    await logout();
     navigate('/login');
   }
 

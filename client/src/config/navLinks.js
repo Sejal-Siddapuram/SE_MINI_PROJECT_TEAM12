@@ -25,6 +25,12 @@ export const navLinks = [
     description: 'Your home page.',
   },
   {
+    to: '/profile',
+    label: 'My Profile',
+    roles: ['Student'],
+    description: 'Add your academic details and skills, and upload your resume.',
+  },
+  {
     to: '/recruiter/listings',
     label: 'My Listings',
     roles: ['Recruiter'],

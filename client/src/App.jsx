@@ -12,6 +12,7 @@ import ListingForm from './pages/recruiter/ListingForm';
 import SearchListings from './pages/student/SearchListings';
 import ListingDetail from './pages/student/ListingDetail';
 import MyApplications from './pages/student/MyApplications';
+import Profile from './pages/student/Profile';
 
 // FR-10 - Saiesh
 import OnboardRecruiters from './pages/admin/OnboardRecruiters';
@@ -42,6 +43,16 @@ export default function App() {
 
           {/* FR-06 - Sampath: My applications */}
           <Route path="/applications" element={<ProtectedRoute roles={['Student']}><MyApplications /></ProtectedRoute>} />
+
+          {/* Account & Profile (FR-03) - Sejal */}
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute roles={['Student']}>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Recruiter Portal (FR-07) - Sagar */}
           <Route

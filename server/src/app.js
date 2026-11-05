@@ -30,6 +30,7 @@ app.get('/api/health', (req, res) => {
 
 // Module routes
 app.use('/api/auth', require('./routes/authRoutes')); // FR-01, FR-02 - Sejal
+app.use('/api/profile', require('./routes/profileRoutes')); // FR-03 - Sejal
 app.use('/api/listings', require('./routes/listingRoutes')); // FR-07 - Sagar
 app.use('/api/listings', require('./routes/searchRoutes')); // FR-04 - Sampath
 app.use('/api/recruiter', require('./routes/recruiterRoutes')); // FR-07 - Sagar

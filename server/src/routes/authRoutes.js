@@ -46,5 +46,6 @@ const loginRules = [
 router.post('/register', authLimiter, registerRules, validate, authController.register); // FR-01
 router.post('/login', authLimiter, loginRules, validate, authController.login); // FR-02
 router.get('/me', authenticate, authController.me); // FR-02
+router.post('/logout', authenticate, authController.logout); // SR-04
 
 module.exports = router;

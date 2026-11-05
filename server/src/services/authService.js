@@ -1,7 +1,9 @@
+const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const StudentProfile = require('../models/StudentProfile');
+const RevokedToken = require('../models/RevokedToken');
 const AppError = require('../utils/AppError');
 const ROLES = require('../utils/roles');
 const { JWT_SECRET, JWT_EXPIRES_IN } = require('../config/env');
@@ -76,6 +78,7 @@ async function login({ email, password }) {
 
   const token = jwt.sign({ sub: user._id.toString(), role: user.role, name: user.name }, JWT_SECRET, {
     expiresIn: JWT_EXPIRES_IN,
+    jwtid: crypto.randomUUID(), // unique id so this one token can be revoked on logout (SR-04)
   });
 
   return { token, expiresIn: JWT_EXPIRES_IN, user: toPublicUser(user) };
@@ -88,4 +91,22 @@ async function getCurrentUser(userId) {
   return toPublicUser(user);
 }
 
-module.exports = { hashPassword, toPublicUser, registerStudent, login, getCurrentUser };
+/**
+ * SR-04: log out by revoking the current token until it would have expired anyway.
+ * The revoked-token list cleans itself up through a TTL index.
+ */
+async function logout({ jti, exp }) {
+  if (!jti) return;
+  await RevokedToken.updateOne(
+    { jti },
+    { $setOnInsert: { jti, expiresAt: new Date(exp * 1000) } },
+    { upsert: true }
+  );
+}
+
+async function isTokenRevoked(jti) {
+  if (!jti) return false;
+  return Boolean(await RevokedToken.exists({ jti }));
+}
+
+module.exports = { hashPassword, toPublicUser, registerStudent, login, getCurrentUser, logout, isTokenRevoked };
