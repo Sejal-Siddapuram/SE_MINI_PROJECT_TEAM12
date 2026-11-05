@@ -95,9 +95,11 @@ PUT /api/listings/6aecbfeb1dba3e76c4f400e8 403 3.720 ms - 110
 
 ---
 
-## 4. UI / System Demonstration Evidence
+## 4. Execution Screenshot Evidence
 
-*(Place UI Screenshots here: Recruiter Login, New Listing Creation Form, My Listings Table with Draft Badge, and Published State.)*
+![TC-REC-01 Test Execution Terminal Evidence](./images/tc-rec-01-execution.png)
+
+*Figure 1: Live terminal execution of the automated verification suite for TC-REC-01, verifying all 7 test scenarios (authentication, draft creation, publishing, editing, 400 validation errors, student role restrictions, and recruiter ownership guards) with a 100% pass rate.*
 
 ---
 
