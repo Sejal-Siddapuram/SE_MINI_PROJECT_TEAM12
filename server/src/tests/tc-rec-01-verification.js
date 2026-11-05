@@ -1,22 +1,12 @@
 /**
  * ============================================================================
- * TEST CASE: TC-REC-01 | FR-07 RECRUITER LISTING LIFECYCLE & VALIDATION
+ * TEST SUITE: TC-REC-01 | FR-07 RECRUITER LISTING LIFECYCLE & VALIDATION
  * ============================================================================
  * 
- * 👤 OWNER / ASSIGNEE : Sagar A Walikar
- * 🎓 USN              : PES1UG24CS396
- * 📌 GITHUB ISSUE     : #13 (Sprint 1 Verification)
- * 📋 REQUIREMENTS     : FR-07, BR-02, BR-03, SR-03
- * 
- * ----------------------------------------------------------------------------
- * 💡 VIVA / LECTURER EXPLANATION CHEAT-SHEET (HINTS FOR SAGAR):
- * ----------------------------------------------------------------------------
- * 1. "Here we are verifying FR-07 (Recruiter Listing Management) against the
- *    official SRS Section 14.3 and Test Plan TC-REC-01."
- * 2. "We test the complete lifecycle: Draft -> Pending -> Published -> Edit."
- * 3. "We verify server-side input validation rejecting missing fields (HTTP 400)."
- * 4. "We enforce RBAC: Students cannot manage listings (HTTP 403 Forbidden)."
- * 5. "We enforce BR-03 ownership: Recruiter B cannot modify Recruiter A's listings."
+ * Module       : Recruiter Portal
+ * Requirements : FR-07, BR-02, BR-03, SR-03
+ * GitHub Issue : #13
+ * Test Case    : TC-REC-01
  * ============================================================================
  */
 
