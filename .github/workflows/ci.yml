@@ -1,0 +1,44 @@
+name: CI
+
+# Runs the automated tests and builds the website on every push and pull request.
+# A green tick on a pull request means all tests passed.
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            server/package-lock.json
+            client/package-lock.json
+
+      - name: Install server
+        run: npm ci --prefix server
+
+      - name: Install client
+        run: npm ci --prefix client
+
+      - name: Run tests with coverage (line + branch)
+        run: npm run test:coverage --prefix server
+
+      - name: Build client
+        run: npm run build --prefix client
+
+      - name: Upload test and coverage reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            server/test-report/
+            server/coverage/

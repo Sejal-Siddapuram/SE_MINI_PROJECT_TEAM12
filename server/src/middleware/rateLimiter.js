@@ -9,6 +9,8 @@ const authLimiter = rateLimit({
   limit: 50,
   standardHeaders: true,
   legacyHeaders: false,
+  // Not applied while automated tests run, so tests can log in as many times as they need
+  skip: () => process.env.NODE_ENV === 'test',
   handler: (req, res) => {
     res.status(429).json({
       success: false,
