@@ -6,7 +6,8 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "test:tc-rec-01": "node src/tests/tc-rec-01-verification.js"
   },
   "engines": {
     "node": ">=18"
