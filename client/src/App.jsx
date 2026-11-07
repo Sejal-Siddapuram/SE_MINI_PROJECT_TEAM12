@@ -18,6 +18,9 @@ import Profile from './pages/student/Profile';
 import OnboardRecruiters from './pages/admin/OnboardRecruiters';
 import ModerateListings from './pages/admin/ModerateListings';
 
+import Analytics from './pages/admin/Analytics';
+import MockTests from './pages/student/MockTests';
+
 export default function App() {
   return (
     <>
@@ -98,6 +101,8 @@ export default function App() {
             }
           />
 
+          <Route path="/admin/analytics" element={<ProtectedRoute roles={['Admin']}><Analytics /></ProtectedRoute>} />
+          <Route path="/mock-tests" element={<ProtectedRoute roles={['Student']}><MockTests /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

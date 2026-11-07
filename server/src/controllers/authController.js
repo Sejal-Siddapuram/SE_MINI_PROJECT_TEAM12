@@ -9,7 +9,7 @@ const register = asyncHandler(async (req, res) => {
 
 // POST /api/auth/login  (FR-02)
 const login = asyncHandler(async (req, res) => {
-  const data = await authService.login(req.body);
+  const data = await authService.login(req.body, req.ip);
   res.json({ success: true, data });
 });
 

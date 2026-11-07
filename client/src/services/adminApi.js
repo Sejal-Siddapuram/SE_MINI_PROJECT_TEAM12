@@ -28,3 +28,8 @@ export async function getAuditLogs() {
   const { data } = await api.get('/admin/audit-logs');
   return data.data;
 }
+
+export async function getAnalytics() {
+  const { data } = await api.get('/admin/analytics');
+  return data.data;
+}

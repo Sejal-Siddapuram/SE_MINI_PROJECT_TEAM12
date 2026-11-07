@@ -7,6 +7,7 @@ async function start() {
   try {
     await connectDB();
     await ensureAdminExists();
+    await require('./utils/seedMockTests')();
     app.listen(PORT, () => {
       console.log(`[server] CampusReady API running at http://localhost:${PORT}/api`);
     });

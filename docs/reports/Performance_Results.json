@@ -1,0 +1,78 @@
+{
+  "started": "2026-11-07T11:54:24.575Z",
+  "environment": {
+    "node": "v22.21.0",
+    "platform": "win32",
+    "chromium": "141.0.7390.37"
+  },
+  "requestedDurationSeconds": 300,
+  "elapsedSeconds": 301.0472569,
+  "concurrentUsers": 50,
+  "fixture": {
+    "students": 100,
+    "listings": 1000,
+    "applications": 10000,
+    "selections": 1000
+  },
+  "measurement": "Full browser navigation until load and expected API-backed content is rendered; 100ms think time.",
+  "timings": {
+    "search": {
+      "completedLoads": 7175,
+      "p95Milliseconds": 1135.6917999999714,
+      "maxMilliseconds": 3131.4815
+    },
+    "dashboard": {
+      "completedLoads": 7103,
+      "p95Milliseconds": 1151.916900000011,
+      "maxMilliseconds": 4718.493600000002
+    }
+  },
+  "errorCount": 0,
+  "errors": [],
+  "searchIndexUsed": true,
+  "winningPlan": {
+    "stage": "SORT",
+    "sortPattern": {
+      "deadline": 1,
+      "_id": 1
+    },
+    "memLimit": 104857600,
+    "limitAmount": 10,
+    "type": "simple",
+    "inputStage": {
+      "stage": "FETCH",
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "status": 1,
+          "approvalStatus": 1,
+          "deadline": 1
+        },
+        "indexName": "status_1_approvalStatus_1_deadline_1",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "status": [],
+          "approvalStatus": [],
+          "deadline": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "status": [
+            "[\"Published\", \"Published\"]"
+          ],
+          "approvalStatus": [
+            "[\"Approved\", \"Approved\"]"
+          ],
+          "deadline": [
+            "[MinKey, MaxKey]"
+          ]
+        }
+      }
+    }
+  },
+  "passed": true
+}

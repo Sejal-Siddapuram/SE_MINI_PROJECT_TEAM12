@@ -6,6 +6,8 @@
  *   description -> short text shown on the dashboard card
  */
 export const navLinks = [
+  { to: '/admin/analytics', label: 'Placement Analytics', roles: ['Admin'], description: 'View student, listing, application and selection totals.' },
+  { to: '/mock-tests', label: 'Mock Tests', roles: ['Student'], description: 'Practise aptitude questions and view your scores.' },
   {
     to: '/listings',
     label: 'Find Listings',

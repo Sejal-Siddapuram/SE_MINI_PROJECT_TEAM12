@@ -31,4 +31,8 @@ const getAuditLogs = asyncHandler(async (req, res) => {
   res.json({ success: true, data: logs });
 });
 
-module.exports = { onboardRecruiter, listRecruiters, listListings, moderateListing, getAuditLogs };
+const getAnalytics = asyncHandler(async (_req, res) => {
+  res.json({ success: true, data: await adminService.getAnalytics() });
+});
+
+module.exports = { getAnalytics, onboardRecruiter, listRecruiters, listListings, moderateListing, getAuditLogs };
