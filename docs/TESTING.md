@@ -76,3 +76,9 @@ Target from the Test Plan: at least 70% line coverage on the service layer, with
 ## CI
 
 `.github/workflows/ci.yml` runs every test and builds the website on each push and pull request. Check for the green tick on your PR before asking for a merge. The test and coverage reports are attached to each run under **Actions → the run → Artifacts**.
+
+## Performance checks
+
+`.github/workflows/performance.yml` runs TC-NFR-01 and TC-NFR-05 on pull requests affecting the server or client. It builds the frontend, seeds an isolated in-memory database with 1,000 listings and 10,000 applications, and measures listing search and admin analytics page loads with 50 concurrent Chromium users for five minutes. The script requires both page-load p95 values to be at most three seconds, zero page errors, and an indexed listing search plan. The JSON result is uploaded as an Actions artifact.
+
+To run it locally, build the client, install Playwright and Chromium as described in `docs/SAIESH_IMPLEMENTATION.md`, then run `node server/scripts/performance.js`. The report is written to `docs/reports/Performance_Results.json`. Short smoke runs can set `PERF_SECONDS` and `PERF_USERS`, but they intentionally fail the full acceptance gate.

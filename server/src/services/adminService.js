@@ -1,3 +1,4 @@
+const Application = require('../models/Application');
 const User = require('../models/User');
 const Listing = require('../models/Listing');
 const AuditLog = require('../models/AuditLog');
@@ -94,7 +95,19 @@ async function getRecentAuditLogs(limit = 10) {
   return AuditLog.find().sort({ createdAt: -1 }).limit(limit).populate('userId', 'name email');
 }
 
+/** FR-11: totals come from persisted records, including all listing states. */
+async function getAnalytics() {
+  const [students, listings, applications, selections] = await Promise.all([
+    User.countDocuments({ role: ROLES.STUDENT }),
+    Listing.countDocuments({}),
+    Application.countDocuments({}),
+    Application.countDocuments({ status: 'Selected' }),
+  ]);
+  return { students, listings, applications, selections };
+}
+
 module.exports = {
+  getAnalytics,
   onboardRecruiter,
   listRecruiters,
   listListingsForModeration,

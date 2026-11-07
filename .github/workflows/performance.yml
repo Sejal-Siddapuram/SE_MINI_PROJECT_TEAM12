@@ -1,0 +1,37 @@
+name: Performance validation
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'server/**'
+      - 'client/**'
+      - '.github/workflows/performance.yml'
+  workflow_dispatch:
+jobs:
+  browser-load:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            server/package-lock.json
+            client/package-lock.json
+      - run: npm ci --prefix server
+      - run: npm ci --prefix client
+      - name: Install isolated browser harness
+        working-directory: server
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - run: npm run build --prefix client
+      - name: Run 50 browser users for five minutes against 1000 listings and 10000 applications
+        run: node server/scripts/performance.js
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-results
+          path: docs/reports/Performance_Results.json

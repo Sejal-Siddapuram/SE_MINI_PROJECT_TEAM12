@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const StudentProfile = require('../models/StudentProfile');
 const RevokedToken = require('../models/RevokedToken');
+const AuditLog = require('../models/AuditLog');
 const AppError = require('../utils/AppError');
 const ROLES = require('../utils/roles');
 const { JWT_SECRET, JWT_EXPIRES_IN } = require('../config/env');
@@ -68,11 +69,14 @@ async function registerStudent({ name, usn, email, password, branch, semester })
  * The same message is used for "unknown email" and "wrong password"
  * so attackers cannot discover which emails are registered.
  */
-async function login({ email, password }) {
+async function login({ email, password }, ip) {
   const user = await User.findOne({ email: email.toLowerCase() }).select('+passwordHash');
   const passwordOk = user ? await bcrypt.compare(password, user.passwordHash) : false;
 
   if (!user || !passwordOk) {
+    await AuditLog.create({ userId: user?._id, action: 'LOGIN_FAILED',
+      targetType: 'User', targetId: user?._id, outcome: 'FAILURE',
+      details: user ? 'Incorrect password' : 'Unknown account', ip });
     throw new AppError(401, 'INVALID_CREDENTIALS', 'Invalid email or password.');
   }
 

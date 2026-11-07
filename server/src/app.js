@@ -38,6 +38,8 @@ app.use('/api/admin', require('./routes/adminRoutes')); // FR-10 - Saiesh
 app.use('/api/applications', require('./routes/applicationRoutes')); // FR-05, FR-06 - Sampath
 app.use('/api/notifications', require('./routes/notificationRoutes')); // FR-06, UC-11 - Sampath
 
+app.use('/api/prep', require('./routes/preparationRoutes')); // FR-12 - Saiesh
+
 // Error handling (must stay last)
 app.use('/api', notFound);
 app.use(errorHandler);

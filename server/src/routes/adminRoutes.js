@@ -49,6 +49,7 @@ router.get(
   adminController.listListings
 ); // FR-10
 router.patch('/listings/:id/moderation', moderationRules, validate, adminController.moderateListing); // FR-10
+router.get('/analytics', adminController.getAnalytics); // FR-11
 router.get('/audit-logs', adminController.getAuditLogs); // SR-06
 
 module.exports = router;
