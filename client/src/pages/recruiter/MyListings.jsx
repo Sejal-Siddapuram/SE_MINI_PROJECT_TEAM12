@@ -105,6 +105,9 @@ export default function MyListings() {
                   <td>
                     {listing.approvalStatus !== 'Removed' && (
                       <div className="btn-group">
+                        <Link to={`/recruiter/listings/${listing._id}/applicants`} className="btn btn-secondary btn-sm">
+                          Applicants
+                        </Link>
                         <Link to={`/recruiter/listings/${listing._id}/edit`} className="btn btn-secondary btn-sm">
                           Edit
                         </Link>

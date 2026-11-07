@@ -79,6 +79,7 @@ async function updateApplicationStatus(recruiterId, applicationId, newStatus) {
 
   application.status = newStatus;
   await application.save();
+  await require('./notificationService').notifyStatusChange(application);
   return application;
 }
 

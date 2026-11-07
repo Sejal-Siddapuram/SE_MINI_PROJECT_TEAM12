@@ -1,4 +1,3 @@
-﻿
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -9,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import NotFound from './pages/NotFound';
 import MyListings from './pages/recruiter/MyListings';
 import ListingForm from './pages/recruiter/ListingForm';
+import Applicants from './pages/recruiter/Applicants';
 import SearchListings from './pages/student/SearchListings';
 import ListingDetail from './pages/student/ListingDetail';
 import MyApplications from './pages/student/MyApplications';
@@ -57,7 +57,7 @@ export default function App() {
             }
           />
 
-          {/* Recruiter Portal (FR-07) - Sagar */}
+          {/* Recruiter Portal (FR-07, FR-08, FR-09) - Sagar */}
           <Route
             path="/recruiter/listings"
             element={
@@ -79,6 +79,14 @@ export default function App() {
             element={
               <ProtectedRoute roles={['Recruiter']}>
                 <ListingForm />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/recruiter/listings/:id/applicants"
+            element={
+              <ProtectedRoute roles={['Recruiter']}>
+                <Applicants />
               </ProtectedRoute>
             }
           />
@@ -109,4 +117,3 @@ export default function App() {
     </>
   );
 }
-
