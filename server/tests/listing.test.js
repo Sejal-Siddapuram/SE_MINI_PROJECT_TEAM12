@@ -159,4 +159,28 @@ describe('FR-07 Recruiter listings', () => {
     expect(titles).toContain('Recruiter A Job');
     expect(titles).not.toContain('Recruiter B Job');
   });
+  it('IT-LIST-10 (TC-NFR-03): listing persists in database and retains all attributes across reload', async () => {
+    const { token } = await loggedInRecruiter();
+    const payload = listingPayload({
+      title: 'Persistent SDE',
+      role: 'Software Engineer',
+      location: 'Bengaluru',
+      description: 'Persistence check description.',
+    });
+    const created = await request(app).post('/api/listings').set(auth(token)).send(payload);
+    expect(created.status).toBe(201);
+    const listingId = created.body.data._id;
+
+    const reloaded = await request(app).get('/api/recruiter/listings/' + listingId).set(auth(token));
+    expect(reloaded.status).toBe(200);
+    expect(reloaded.body.data).toMatchObject({
+      _id: listingId,
+      title: 'Persistent SDE',
+      role: 'Software Engineer',
+      location: 'Bengaluru',
+      description: 'Persistence check description.',
+      status: 'Draft',
+      approvalStatus: 'Pending',
+    });
+  });
 });
