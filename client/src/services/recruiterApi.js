@@ -27,3 +27,20 @@ export async function setPublishState(id, action) {
   const { data } = await api.patch(`/listings/${id}/publish`, { action });
   return data.data;
 }
+
+// FR-08 and FR-09: Recruiter applicant review and status updates
+
+export async function getListingApplicants(id) {
+  const { data } = await api.get(`/recruiter/listings/${id}/applicants`);
+  return data.data;
+}
+
+export async function getListingApplicantSummary(id) {
+  const { data } = await api.get(`/recruiter/listings/${id}/applicants/summary`);
+  return data.data;
+}
+
+export async function updateApplicationStatus(applicationId, status) {
+  const { data } = await api.patch(`/recruiter/applications/${applicationId}`, { status });
+  return data.data;
+}
