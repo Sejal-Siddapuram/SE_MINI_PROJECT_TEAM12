@@ -155,3 +155,22 @@ describe('SR-03 / TC-SEC-07 Injection and script input', () => {
     expect(res.body.error.code).toBe('VALIDATION_ERROR');
   });
 });
+
+
+describe('SR-02 / TC-SEC-02 Transport security and headers', () => {
+  it('IT-SEC-16 (TC-SEC-02): sets HSTS and security headers via Helmet', async () => {
+    const res = await request(app).get('/api/health');
+
+    expect(res.status).toBe(200);
+    expect(res.headers['strict-transport-security']).toBe('max-age=31536000; includeSubDomains');
+    expect(res.headers['x-content-type-options']).toBe('nosniff');
+    expect(res.headers['x-frame-options']).toBe('SAMEORIGIN');
+  });
+
+  it('IT-SEC-17 (TC-SEC-02): sets upgrade-insecure-requests in Content-Security-Policy', async () => {
+    const res = await request(app).get('/api/health');
+
+    expect(res.status).toBe(200);
+    expect(res.headers['content-security-policy']).toContain('upgrade-insecure-requests');
+  });
+});
