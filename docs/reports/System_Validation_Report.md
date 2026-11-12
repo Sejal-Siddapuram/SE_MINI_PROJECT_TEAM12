@@ -2,9 +2,9 @@
 
 ## Findings
 
-All 163 automated tests passed across 12 test suites with zero failures. Code coverage reached 98.12% line coverage and 89.83% branch coverage across server code, exceeding the 70% requirement. Service layer coverage reached 97.38%.
+All 163 automated tests passed across 12 test suites with zero failures. Code coverage reached 98.53% line coverage and 87.14% branch coverage across server code, exceeding the 70% requirement. Service layer coverage reached 97.38%.
 
-Manual system validation confirmed functional workflows for student registration, authentication, profile management, resume upload, session termination, and recruiter listing management.
+Manual system validation confirmed functional workflows for student registration, authentication, profile management, resume upload, session termination, listing search, application submission, recruiter listing lifecycle, recruiter applicant review, admin listing moderation, admin analytics, and mock aptitude testing.
 
 Security checks verified password hashing with bcrypt, token invalidation upon logout, input sanitisation against script tags and operator injection, and transport security headers including HTTP Strict Transport Security.
 
@@ -50,26 +50,32 @@ FR-03: Student profile and resume
 
 FR-04: Listing search and filtering
 - Automated tests: search.test.js (IT-SCH-01 to IT-SCH-16)
+- System validation: UC-04_1
 - Evidence: Query filtering by location, role, and keyword; pagination and sorting verification.
 
 FR-05 and FR-06: Student applications and withdrawal
 - Automated tests: application.test.js (TC-APP-01 to TC-APP-04)
+- System validation: UC-05_1, UC-06_1
 - Evidence: Application creation, duplicate prevention, deadline checks, and withdrawal before decision.
 
 FR-07: Recruiter listings
 - Automated tests: listing.test.js (IT-LIST-01 to IT-LIST-10)
+- System validation: UC-07_1
 - Evidence: Draft creation, state transition to Published, edit persistence, validation error handling on empty title or past deadline, and student role rejection.
 
 FR-08 and FR-09: Recruiter applicant review and status
 - Automated tests: recruiter.test.js (IT-REC-APP-01 to IT-REC-APP-09)
+- System validation: UC-08_1
 - Evidence: Retrieval of applicants with profile details, status updates to Shortlisted, Rejected, or Selected, status transition validation (409 on invalid change), recruiter ownership checks (403 on cross-recruiter access), and applicant count summaries.
 
 FR-10 and FR-11: Admin moderation and placement analytics
 - Automated tests: admin.test.js (IT-ADM-01 to IT-ADM-20, IT-ANL-01 to IT-ANL-09)
+- System validation: UC-10_1, UC-11_1
 - Evidence: Listing approval and removal, recruiter verification, student and listing metrics calculation.
 
 FR-12: Aptitude tests and interview guidance
 - Automated tests: preparation.test.js (IT-PREP-01 to IT-PREP-19)
+- System validation: UC-12_1
 - Evidence: Objective question scoring, attempt history storage, and interview guidance retrieval.
 
 SR-01: Password storage
@@ -109,6 +115,37 @@ NFR-03: Data persistence
 NFR-04: Service availability
 - Automated tests: health.test.js (IT-HEALTH-01)
 - Evidence: Endpoint returns status ok and database connected state.
+
+## Updated test plan execution results
+
+| Test ID | Requirement | Scenario | Expected result | Actual result | Status |
+| --- | --- | --- | --- | --- | --- |
+| TC-AUTH-01 | FR-01, FR-02 | Student registration with valid USN and email | User created, password hashed, login returns token | Registered successfully, JWT returned | Pass |
+| TC-AUTH-02 | FR-01 | Registration with duplicate email or invalid USN | Validation error, HTTP 400 or 409 | 400 validation error returned | Pass |
+| TC-PROF-01 | FR-03, SR-05 | Profile update with branch, semester, CGPA, skills, PDF resume | Profile marked Complete, resume URL persisted | Profile updated, valid PDF accepted | Pass |
+| TC-SCH-01 | FR-04 | Search published listings by keyword and filters | Filtered subset of approved listings returned | Search returned matching listings | Pass |
+| TC-APP-01 | FR-05 | Student with complete profile applies to published listing | Application created with status Applied | Application saved with status Applied | Pass |
+| TC-APP-02 | FR-05 | Student submits duplicate application | Rejected with HTTP 409 DUPLICATE_APPLICATION | 409 returned, single application in DB | Pass |
+| TC-APP-03 | FR-05 | Student applies to expired listing | Rejected with HTTP 410 DEADLINE_PASSED | 410 returned | Pass |
+| TC-APP-04 | FR-06 | Student withdraws active application | Application removed, re-application allowed | 204 returned, application removed | Pass |
+| TC-REC-01 | FR-07 | Recruiter creates listing and publishes it | Saved as Draft, transitions to Published | Created with 201, published with 200 | Pass |
+| TC-REC-02 | FR-08 | Recruiter views applicants for own listing | List of applicants with profile details | Applicants returned; cross-access returns 403 | Pass |
+| TC-REC-03 | FR-09 | Recruiter shortlists, rejects, or selects applicant | Status updated, notifications triggered | Status updated, invalid move returns 409 | Pass |
+| TC-REC-04 | FR-09 | Recruiter views applicant summary counts | Status breakdown counts returned accurately | Counts returned; cross-access returns 403 | Pass |
+| TC-ADM-01 | FR-10, FR-11 | Admin moderates listings and views analytics | Approval status updated, metrics calculated | Moderation and analytics API returned 200 | Pass |
+| TC-PREP-01 | FR-12 | Student submits aptitude test answers | Scored accurately, attempt saved to history | Attempt recorded with score | Pass |
+| TC-NFR-01 | NFR-01 | 50 concurrent users on search and analytics for 5 min | 95th percentile response <= 3000 ms, 0 errors | Search p95: 1135.69 ms, Analytics p95: 1151.92 ms | Pass |
+| TC-NFR-02 | NFR-02 | Usability and responsive layout on mobile viewports | Responsive navigation, focus rings, readable text | Passed desktop and mobile, table width flagged | Pass |
+| TC-NFR-03 | NFR-03 | Database persistence across independent API queries | Field attributes and dates retained intact | Listing and application data reloaded accurately | Pass |
+| TC-NFR-04 | NFR-04 | Health endpoint reporting service and DB status | HTTP 200 with status ok and DB connected | GET /api/health returned 200 ok | Pass |
+| TC-NFR-05 | NFR-01 | Database query plan uses indexes for search | Winning plan uses index scan (IXSCAN) | IXSCAN confirmed on search index | Pass |
+| TC-SEC-01 | SR-01 | Password hashing with bcrypt salt | Password never stored or returned in plain text | Salted bcrypt hash verified | Pass |
+| TC-SEC-02 | SR-02 | Transport security headers enforcement | HSTS and CSP headers present | HSTS max-age 31536000 and CSP verified | Pass |
+| TC-SEC-03 | SR-03 | Role-based authorization across protected endpoints | Unauthorized roles rejected with HTTP 403 | RBAC enforced on admin, recruiter, student | Pass |
+| TC-SEC-04 | SR-04 | Token expiry and revocation upon logout | Terminated tokens rejected with HTTP 401 | 401 returned on revoked and expired tokens | Pass |
+| TC-SEC-05 | SR-05 | File upload MIME type and size enforcement | Non-PDF files and oversized files rejected | 415 on non-PDF, 413 on oversized file | Pass |
+| TC-SEC-06 | SR-06 | Security audit logging for actions and failed logins | Audit entries recorded with actor and IP | Audit logs verified in DB | Pass |
+| TC-SEC-07 | SR-03 | Input sanitisation against injection and scripts | Operator injection rejected, scripts stored as text | Injection blocked with 400, no script execution | Pass |
 
 ## System validation evidence log
 
@@ -184,17 +221,81 @@ NFR-04: Service availability
 - Screenshot: docs/reports/screenshots/SR-04_2_old_token_rejected_401.png
 - Status: Pass
 
-10. TEST_1: Unit test execution summary
+10. UC-04_1: Listing search and filters
+- Target: /listings
+- Input: View published listings with role and location filters.
+- Expected: Listing cards displayed with company, role, type, location, and deadline.
+- Actual: Listing cards displayed accurately.
+- Screenshot: docs/reports/screenshots/UC-04_1_listing_search_and_filters.png
+- Status: Pass
+
+11. UC-05_1: Student view and apply to listing
+- Target: /listings/:id
+- Input: View listing detail view with job description and requirements.
+- Expected: Detailed job overview with Apply button.
+- Actual: Listing details displayed with Apply button.
+- Screenshot: docs/reports/screenshots/UC-05_1_student_apply_to_listing.png
+- Status: Pass
+
+12. UC-06_1: Student applications status view
+- Target: /applications
+- Input: Student checks status of submitted applications.
+- Expected: List of applied jobs with submission date and status badge.
+- Actual: Application displayed with Shortlisted status.
+- Screenshot: docs/reports/screenshots/UC-06_1_student_my_applications.png
+- Status: Pass
+
+13. UC-07_1: Recruiter listings management
+- Target: /recruiter/listings
+- Input: Recruiter views own job postings with status.
+- Expected: Table of listings with title, deadline, status, approval status, and action links.
+- Actual: Listings displayed with Edit, Close, and Applicants action buttons.
+- Screenshot: docs/reports/screenshots/UC-07_1_recruiter_my_listings.png
+- Status: Pass
+
+14. UC-08_1: Recruiter applicant review and status actions
+- Target: /recruiter/listings/:id/applicants
+- Input: Recruiter opens applicants page for a listing.
+- Expected: Status summary cards (Applied, Shortlisted, Selected, Rejected) and student row with Shortlist and Reject buttons.
+- Actual: Summary cards and applicant table with action controls rendered accurately.
+- Screenshot: docs/reports/screenshots/UC-08_1_recruiter_applicant_review.png
+- Status: Pass
+
+15. UC-10_1: Admin listing moderation
+- Target: /admin/listings
+- Input: Admin reviews pending and published job postings.
+- Expected: Table of listings with Approve, Remove, and Edit moderation actions.
+- Actual: Moderation controls rendered with listing status.
+- Screenshot: docs/reports/screenshots/UC-10_1_admin_moderation.png
+- Status: Pass
+
+16. UC-11_1: Admin placement analytics
+- Target: /admin/analytics
+- Input: Admin checks summary totals across students, listings, applications, and selections.
+- Expected: Metric cards showing counts for each entity.
+- Actual: Cards displayed with real-time totals.
+- Screenshot: docs/reports/screenshots/UC-11_1_admin_placement_analytics.png
+- Status: Pass
+
+17. UC-12_1: Student mock aptitude test
+- Target: /mock-tests
+- Input: Student views aptitude practice test with multiple-choice questions.
+- Expected: Objective questions displayed with radio options and submit action.
+- Actual: Questions and option selectors rendered properly.
+- Screenshot: docs/reports/screenshots/UC-12_1_mock_aptitude_test.png
+- Status: Pass
+
+18. TEST_1: Unit test execution summary
 - Target: Jest test runner
 - Expected: All test suites and cases pass without regression.
-- Actual: 151 tests passed across 11 baseline suites (extended to 163 tests across 12 suites with recruiter review).
+- Actual: 163 tests passed across 12 suites.
 - Screenshot: docs/reports/screenshots/TEST_1_unit_test_report_151_passed.png
 - Status: Pass
 
-11. TEST_2: Code coverage report
+19. TEST_2: Code coverage report
 - Target: Istanbul / Jest coverage output
 - Expected: Line coverage above 70%.
-- Actual: 98.12% line coverage, 89.83% branch coverage.
+- Actual: 98.53% line coverage, 87.14% branch coverage.
 - Screenshot: docs/reports/screenshots/TEST_2_code_and_branch_coverage.png
 - Status: Pass
 
